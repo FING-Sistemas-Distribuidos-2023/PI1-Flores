@@ -6,21 +6,21 @@
 	<subtitle>The low-budget company presents...</subtitle>
 	<script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
 </head>
-	
+
 <body>
 	<h1 style="text-align:center">Kahoot!</h1>
-	
+
 	<div class="imagen">
 	<p style="text-align:center">
 
 	<img type=png src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Kahoot_Logo.svg/1280px-Kahoot_Logo.svg.png" alt="kahoot" width=590 height=300  class="center">
 	</p>
 	</div>
-	
+
 	<p style="text-align:center">
 	<button type="button" href="#" id="btn">Obtener pregunta</button
 	</p>
-	
+
 	<p style="text-align:center">
 	 <button onclick="rtaA()">Respuesta A</button>
 	</p>
@@ -28,62 +28,112 @@
 	<p style="text-align:center">
 	 <button onclick="rtaB()">Respuesta B</button>
 	</p>
-	
-	<p style="text-align:center" id="Texto1"></p>
-	
-	<h1 style="text-align:center" id="Texto2"></h1>
-	
-	<p style="text-align:center" id="Cont"></p>
-	
-	<p style="text-align:center" id="Texto_VE"> </p>
-	
- <script type="text/javascript">
- 	var pregunta;
- 	var respuesta;
- 	var hay_pregunta = 0;
- 	const texto = "Has apretado el gatillo "
- 	
-      $('button#btn').click(function(){
 
+	<p style="text-align:center" id="Texto1"></p>
+
+	<p style="text-align:center" id="A"></p>
+
+    <p style="text-align:center" id="B"></p>
+
+	<p style="text-align:center" id="Cont"></p>
+
+	<p style="text-align:center" id="Texto_VE"> </p>
+
+ <script type="text/javascript">
+ 	var pregunta, respuesta, A, B;
+ 	var puntos = 0;
+ 	var end;
+	var inicio;
+	var counter = 0;
+	var flag = false;
+
+      $('button#btn').click(function(){
+        if (counter==0){
+            inicio = performance.now();
+        }
       	document.body.style.backgroundColor = "white";
-      	document.getElementById("Texto2").innerHTML = '';
-      	document.getElementById("Cont").innerHTML = '';
-      	document.getElementById("Texto_VE").innerHTML = '';
-      	document.getElementById("Texto1").innerHTML = pregunta;
-      	
+      	document.getElementById("A").innerHTML = '';
+      	document.getElementById("B").innerHTML = '';
+
+
         $.ajax({
             url: "/pregunta",
             type: "POST",
             success: function(resp){
+				counter += 1;
+				if (counter < 5){
+                    flag = true;
+                }
             	resp = resp.split("==");
             	pregunta = resp[0];
             	respuesta = resp[1];
+            	pregunta = pregunta.split("\n");
+            	A = pregunta[1];
+            	B = pregunta[2];
+            	pregunta = pregunta[0];
             	console.log(pregunta);
-            	console.log(respuesta);
-            	document.getElementById("Texto1").innerHTML = '¿Respuesta A o B?';
+                document.getElementById("Texto1").innerHTML = pregunta;
+            	document.getElementById("A").innerHTML = A;
+            	document.getElementById("B").innerHTML = B;
             }
         });
-        
+
       });
 
       function rtaA(){
-        if(respuesta[0] == '1'){
-            document.getElementById("Texto1").innerHTML = 'Respuesta correcta!';
-        }
-        else {
-            document.getElementById("Texto1").innerHTML = 'Respuesta incorrecta :(';
+		if(flag) {
+			if(respuesta[0] == '1'){
+				document.getElementById("Texto1").innerHTML = 'Respuesta correcta!';
+				document.getElementById("A").innerHTML = '';
+            	document.getElementById("B").innerHTML = '';
+				puntos = puntos +1;
+			}
+			else {
+				document.getElementById("Texto1").innerHTML = 'Respuesta incorrecta :(';
+				document.getElementById("A").innerHTML = '';
+            	document.getElementById("B").innerHTML = '';
+			}
+		}
+        flag = false;
+        if (counter >= 4) {
+            end = performance.now() - inicio;
+            setTimeout(function() {
+                console.log("Pausa de 2 segundos");
+                console.log("Continuación de la ejecución");
+            }, 2000);
+            document.getElementById("Texto1").innerHTML = 'Fin del juego, envía tus respuestas';
+            document.getElementById("A").innerHTML = '';
+            document.getElementById("B").innerHTML = '';
         }
       }
 
       function rtaB(){
-        if(respuesta[1] == '1'){
-            document.getElementById("Texto1").innerHTML = 'Respuesta correcta!';
+        if(flag) {
+            if(respuesta[1] == '1'){
+                document.getElementById("Texto1").innerHTML = 'Respuesta correcta!';
+                document.getElementById("A").innerHTML = '';
+            	document.getElementById("B").innerHTML = '';
+                puntos = puntos +1;
+            }
+            else {
+                document.getElementById("Texto1").innerHTML = 'Respuesta incorrecta :(';
+                document.getElementById("A").innerHTML = '';
+            	document.getElementById("B").innerHTML = '';
+            }
         }
-        else {
-            document.getElementById("Texto1").innerHTML = 'Respuesta incorrecta :(';
+        flag = false;
+        if (counter >= 4) {
+            end = performance.now() - inicio;
+            setTimeout(function() {
+                console.log("Pausa de 2 segundos");
+                console.log("Continuación de la ejecución");
+            }, 2000);
+            document.getElementById("Texto1").innerHTML = 'Fin del juego, envía tus respuestas';
+            document.getElementById("A").innerHTML = '';
+            document.getElementById("B").innerHTML = '';
         }
       }
  </script>
-  
+
 </body>
 <html>
