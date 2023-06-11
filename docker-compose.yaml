@@ -1,0 +1,13 @@
+version: '3'
+
+services:
+  server:
+    image: emilianof/kajut-server:latest
+
+  client:
+    image: emilianof/kajut-client:latest
+    ports:
+      - 5000:5000
+      
+  redis-cluster:
+    image: "redis:alpine"

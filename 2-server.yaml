@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kajut-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kajut-server
+  template:
+    metadata:
+      labels:
+        app: kajut-server
+    spec:
+      containers:
+      - name: kajut-server
+        image: emilianof/kajut-server:latest
+        ports:
+        - containerPort: 5000
+          #env:
+          #- name: REDIS_HOST
+          #  value: redis-cluster
+          #- name: REDIS_PORT
+          #  value: "6379"

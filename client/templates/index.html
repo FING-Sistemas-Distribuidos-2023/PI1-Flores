@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+        <meta charset="utf-8">
+	<title>Kahoot!</title>
+	<subtitle>The low-budget company presents...</subtitle>
+	<script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+</head>
+	
+<body>
+	<h1 style="text-align:center">Kahoot!</h1>
+	
+	<div class="imagen">
+	<p style="text-align:center">
+
+	<img type=png src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Kahoot_Logo.svg/1280px-Kahoot_Logo.svg.png" alt="kahoot" width=590 height=300  class="center">
+	</p>
+	</div>
+	
+	<p style="text-align:center">
+	<button type="button" href="#" id="btn">Obtener pregunta</button
+	</p>
+	
+	<p style="text-align:center">
+	 <button onclick="rtaA()">Respuesta A</button>
+	</p>
+
+	<p style="text-align:center">
+	 <button onclick="rtaB()">Respuesta B</button>
+	</p>
+	
+	<p style="text-align:center" id="Texto1"></p>
+	
+	<h1 style="text-align:center" id="Texto2"></h1>
+	
+	<p style="text-align:center" id="Cont"></p>
+	
+	<p style="text-align:center" id="Texto_VE"> </p>
+	
+ <script type="text/javascript">
+ 	var pregunta;
+ 	var respuesta;
+ 	var hay_pregunta = 0;
+ 	const texto = "Has apretado el gatillo "
+ 	
+      $('button#btn').click(function(){
+
+      	document.body.style.backgroundColor = "white";
+      	document.getElementById("Texto2").innerHTML = '';
+      	document.getElementById("Cont").innerHTML = '';
+      	document.getElementById("Texto_VE").innerHTML = '';
+      	document.getElementById("Texto1").innerHTML = pregunta;
+      	
+        $.ajax({
+            url: "/pregunta",
+            type: "POST",
+            success: function(resp){
+            	resp = resp.split("==");
+            	pregunta = resp[0];
+            	respuesta = resp[1];
+            	console.log(pregunta);
+            	console.log(respuesta);
+            	document.getElementById("Texto1").innerHTML = '¿Respuesta A o B?';
+            }
+        });
+        
+      });
+
+      function rtaA(){
+        if(respuesta[0] == '1'){
+            document.getElementById("Texto1").innerHTML = 'Respuesta correcta!';
+        }
+        else {
+            document.getElementById("Texto1").innerHTML = 'Respuesta incorrecta :(';
+        }
+      }
+
+      function rtaB(){
+        if(respuesta[1] == '1'){
+            document.getElementById("Texto1").innerHTML = 'Respuesta correcta!';
+        }
+        else {
+            document.getElementById("Texto1").innerHTML = 'Respuesta incorrecta :(';
+        }
+      }
+ </script>
+  
+</body>
+<html>
