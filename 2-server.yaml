@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: kajut-server
-        image: emilianof/kajut-server:5
+        image: emilianof/kajut-server:8
         ports:
         - containerPort: 5000
           #env:

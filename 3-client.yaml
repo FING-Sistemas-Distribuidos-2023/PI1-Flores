@@ -27,7 +27,7 @@ spec:
     spec:
       containers:
       - name: kajut-client
-        image: emilianof/kajut-client:7
+        image: emilianof/kajut-client:8
         imagePullPolicy: Always
         ports:
         - containerPort: 5000

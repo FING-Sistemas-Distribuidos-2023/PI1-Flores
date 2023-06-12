@@ -23,28 +23,31 @@ def generar_pregunta():
     try:
         rd = RedisCluster(host="redis-cluster", port=6379)
 
-        # Verificar la conexión con Redis
         if rd.ping():
             print("Conexión exitosa con el clúster Redis.")
+        if rd.get('scores') != None:
+            rd.delete('scores')
 
-        if rd.get('preg1') is None:
-            pregunta = preguntas[0]
-            pregunta_str = f"{pregunta['pregunta']}=={pregunta['respuesta']}"
-            rd.set('preg1', pregunta_str)
-        if rd.get('preg2') is None:
-            pregunta = preguntas[1]
-            pregunta_str = f"{pregunta['pregunta']}=={pregunta['respuesta']}"
-            rd.set('preg2', pregunta_str)
-        if rd.get('preg3') is None:
-            pregunta = preguntas[2]
-            pregunta_str = f"{pregunta['pregunta']}=={pregunta['respuesta']}"
-            rd.set('preg3', pregunta_str)
-        if rd.get('preg4') is None:
-            pregunta = preguntas[3]
-            pregunta_str = f"{pregunta['pregunta']}=={pregunta['respuesta']}"
-            rd.set('preg4', pregunta_str)
-        if rd.get('preg5') is None:
-            rd.set('preg5', "No hay más preguntas, o querés seguir humillándote?")
+        while(True):
+
+            if rd.get('preg1') is None:
+                pregunta = preguntas[0]
+                pregunta_str = f"{pregunta['pregunta']}=={pregunta['respuesta']}"
+                rd.set('preg1', pregunta_str)
+            if rd.get('preg2') is None:
+                pregunta = preguntas[1]
+                pregunta_str = f"{pregunta['pregunta']}=={pregunta['respuesta']}"
+                rd.set('preg2', pregunta_str)
+            if rd.get('preg3') is None:
+                pregunta = preguntas[2]
+                pregunta_str = f"{pregunta['pregunta']}=={pregunta['respuesta']}"
+                rd.set('preg3', pregunta_str)
+            if rd.get('preg4') is None:
+                pregunta = preguntas[3]
+                pregunta_str = f"{pregunta['pregunta']}=={pregunta['respuesta']}"
+                rd.set('preg4', pregunta_str)
+            if rd.get('preg5') is None:
+                rd.set('preg5', "No hay más preguntas, o querés seguir humillándote?")
     except Exception as e:
         print(f"Error al conectarse al clúster Redis: {str(e)}")
 

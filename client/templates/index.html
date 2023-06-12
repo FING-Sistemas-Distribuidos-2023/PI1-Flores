@@ -35,9 +35,7 @@
 
     <p style="text-align:center" id="B"></p>
 
-	<p style="text-align:center" id="Cont"></p>
-
-	<p style="text-align:center" id="Texto_VE"> </p>
+    <button type="button" href="#" id="send">Enviar resultado</button>
 
  <script type="text/javascript">
  	var pregunta, respuesta, A, B;
@@ -45,7 +43,25 @@
  	var end;
 	var inicio;
 	var counter = 0;
+	var total = 0;
 	var flag = false;
+	var click = 1;
+
+    $('button#send').click(function(){
+        if (counter >= 4){
+            $.ajax({
+                url: "/save-score",
+                type: "POST",
+                data: { score:  total},
+                success: function(resp){
+                    resp = resp.split("\n");
+                    document.getElementById("Texto1").innerHTML = resp[0];
+            	    document.getElementById("A").innerHTML = resp[1];
+            	    document.getElementById("B").innerHTML = resp[2];
+                }
+            });
+        }
+    });
 
       $('button#btn').click(function(){
         if (counter==0){
@@ -55,10 +71,11 @@
       	document.getElementById("A").innerHTML = '';
       	document.getElementById("B").innerHTML = '';
 
-
+        if (click < 5){
         $.ajax({
             url: "/pregunta",
             type: "POST",
+            data: { nro: "preg"+click},
             success: function(resp){
 				counter += 1;
 				if (counter < 5){
@@ -77,7 +94,32 @@
             	document.getElementById("B").innerHTML = B;
             }
         });
-
+        click = click + 1
+        }
+        else{
+            $.ajax({
+            url: "/pregunta",
+            type: "POST",
+            data: { nro: "preg5"},
+            success: function(resp){
+				counter += 1;
+				if (counter < 5){
+                    flag = true;
+                }
+            	resp = resp.split("==");
+            	pregunta = resp[0];
+            	respuesta = resp[1];
+            	pregunta = pregunta.split("\n");
+            	A = pregunta[1];
+            	B = pregunta[2];
+            	pregunta = pregunta[0];
+            	console.log(pregunta);
+                document.getElementById("Texto1").innerHTML = pregunta;
+            	document.getElementById("A").innerHTML = A;
+            	document.getElementById("B").innerHTML = B;
+            }
+        });
+        }
       });
 
       function rtaA(){
@@ -95,7 +137,7 @@
 			}
 		}
         flag = false;
-        if (counter >= 4) {
+        if (counter == 4) {
             end = performance.now() - inicio;
             setTimeout(function() {
                 console.log("Pausa de 2 segundos");
@@ -104,6 +146,7 @@
             document.getElementById("Texto1").innerHTML = 'Fin del juego, envía tus respuestas';
             document.getElementById("A").innerHTML = '';
             document.getElementById("B").innerHTML = '';
+            total = puntos;
         }
       }
 
@@ -122,7 +165,7 @@
             }
         }
         flag = false;
-        if (counter >= 4) {
+        if (counter == 4) {
             end = performance.now() - inicio;
             setTimeout(function() {
                 console.log("Pausa de 2 segundos");
@@ -131,6 +174,7 @@
             document.getElementById("Texto1").innerHTML = 'Fin del juego, envía tus respuestas';
             document.getElementById("A").innerHTML = '';
             document.getElementById("B").innerHTML = '';
+            total = puntos;
         }
       }
  </script>
